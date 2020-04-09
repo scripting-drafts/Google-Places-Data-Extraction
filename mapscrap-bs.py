@@ -16,8 +16,6 @@ driver.get(urlMaps)
 driver.find_element_by_xpath('//*[@id="searchboxinput"]').send_keys(concept)
 driver.find_element_by_xpath('//*[@id="searchboxinput"]').send_keys(Keys.RETURN)
 
-sleep(10)
-
 level_content = BeautifulSoup(driver.page_source, "html.parser")
 
 for locationString in level_content.find_all('span', class_="section-result-location"):
