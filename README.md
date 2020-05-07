@@ -1,1 +1,1 @@
-This two scripts will scan Barcelona's neighbourhoods by keyword given and write the results to an excel file. The first one will keep duplicates and classify the results by neighbourhoods. The other one will remove duplicates and write the results without an assigned neighbourhood.
+This two scripts will scan Barcelona's neighbourhoods by keyword given and write the results to an excel file. The first one will keep duplicates and classify the results by neighbourhoods. The second one will remove duplicates and write the results without an assigned neighbourhood.
