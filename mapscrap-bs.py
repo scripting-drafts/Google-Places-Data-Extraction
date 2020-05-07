@@ -11,8 +11,6 @@ driver = webdriver.Firefox()
 driver.implicitly_wait(10)
 driver.get(urlMaps)
 
-#level_content = BeautifulSoup(driver.page_source, "html.parser")
-
 driver.find_element_by_xpath('//*[@id="searchboxinput"]').send_keys(concept)
 driver.find_element_by_xpath('//*[@id="searchboxinput"]').send_keys(Keys.RETURN)
 
