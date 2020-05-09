@@ -80,132 +80,146 @@ class mapsSearch:
 ms = mapsSearch()
 
 for barri in barris:
-    ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.CONTROL + 'a')
-    ms.getDriver().find_element_by_id('searchboxinput').send_keys(barri + ' barcelona' + Keys.RETURN)
+    try:
+        ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.COMMAND + 'a')
+        ms.getDriver().find_element_by_id('searchboxinput').send_keys(barri + ' barcelona' + Keys.RETURN)
+    except ElementNotInteractableException:
+        ms.getDriver().get('https://www.google.com/maps/')
+        ms.getDriver().find_element_by_id('searchboxinput').send_keys(barri + ' barcelona' + Keys.RETURN)
     time.sleep(4)
-    ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.CONTROL + 'a')
-    ms.getDriver().find_element_by_id('searchboxinput').send_keys(concept + Keys.RETURN)
-    time.sleep(4)
+    try:
+        ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.COMMAND + 'a')
+        ms.getDriver().find_element_by_id('searchboxinput').send_keys(concept + Keys.RETURN)
+    except ElementNotInteractableException:
+        time.sleep(3)
+        ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.COMMAND + 'a')
+        ms.getDriver().find_element_by_id('searchboxinput').send_keys(concept + Keys.RETURN)
+    time.sleep(3)
     ms.zoomSearch()
     print('Buscant establiments a ' + str(barri))
     searchLevel = 1
     while searchLevel <= 6:
-        sectionResultsRAW = ms.getDriver().find_elements_by_css_selector('.section-result-title')
-        sectionResultsLocationRAW = ms.getDriver().find_elements_by_css_selector('.section-result-location')
         try:
-            for (sectionResult, sectionResultLocation) in itertools.zip_longest(sectionResultsRAW, sectionResultsLocationRAW, fillvalue = barri):
-                    worksheet.write('C' + str(row), barri)
-                    ms.getResultsDriver().find_element_by_id('searchboxinput').send_keys(Keys.CONTROL + 'a')
-                    ms.getResultsDriver().find_element_by_id('searchboxinput').send_keys(sectionResult.text + " " + sectionResultLocation.text + Keys.RETURN)
-                    time.sleep(6)
-                    try:
-                        newTitle = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-hero-header-title-title')))
-                        newTitle = ms.getResultsDriver().find_element_by_css_selector('.section-hero-header-title-title').text
-                        newLocation = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-info-text')))
-                        newLocation = ms.getResultsDriver().find_element_by_css_selector('.section-info-text').text
-                        worksheet.write('A' + str(row), newTitle)
-                        worksheet.write('B' + str(row), newLocation)
-                    except TimeoutException:
-                        try:
-                            click = WebDriverWait(ms.getResultsDriver(), 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.section-result-title')))
-                            ms.getResultsDriver().find_element_by_css_selector('.section-result').click()
-                            time.sleep(6)
-                            try:
-                                newTitle = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-hero-header-title-title')))
-                                newTitle = ms.getResultsDriver().find_element_by_css_selector('.section-hero-header-title-title').text
-                                newLocation = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-info-text')))
-                                newLocation = ms.getResultsDriver().find_element_by_css_selector('.section-info-text').text
-                                worksheet.write('A' + str(row), newTitle)
-                                worksheet.write('B' + str(row), newLocation)
-                            except TimeoutException:
-                                try:
-                                    click = WebDriverWait(ms.getResultsDriver(), 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.section-result-title')))
-                                    ms.getResultsDriver().find_element_by_css_selector('.section-result').click()
-                                    time.sleep(6)
-                                    try:
-                                        newTitle = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-hero-header-title-title')))
-                                        newTitle = ms.getResultsDriver().find_element_by_css_selector('.section-hero-header-title-title').text
-                                        newLocation = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-info-text')))
-                                        newLocation = ms.getResultsDriver().find_element_by_css_selector('.section-info-text').text
-                                        worksheet.write('A' + str(row), newTitle)
-                                        worksheet.write('B' + str(row), newLocation)
-                                    except TimeoutException:
-#                                        print('1 TimeoutException in section-info-text')
-                                        pass
-                                    else:
-                                        try:
-                                            starsRate = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-star-display')))
-                                            worksheet.write('C' + str(row), float((starsRate.text).replace(',','.')))
-                                        except TimeoutException:
-                                            print('No starsRate')
-                                            pass
-                                        try:
-                                            commentsNum = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-rating-term-list > span:nth-child(1) > span:nth-child(2) > span:nth-child(1) > button:nth-child(1)')))
-                                            subCommentsNum = re.sub('[()]', '', str(commentsNum.text))
-                                            cleanCommentsNum = subCommentsNum.replace('.', '')
-                                            worksheet.write('D' + str(row), int(cleanCommentsNum))
-                                        except TimeoutException:
-                                            print('No commentsNum')
-                                            pass
-                                        try:
-                                            placeType = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.GLOBAL__gm2-body-2:nth-child(2) > span:nth-child(1) > span:nth-child(1) > button:nth-child(1)')))
-                                            worksheet.write('E' + str(row), placeType.text)
-                                        except TimeoutException:
-                                            print('No placeType')
-                                            pass
-                                except TimeoutException:
-#                                    print('1 TimeoutException in section-result')
-                                    pass
-                                except ElementClickInterceptedException:
-#                                    print('1 ElementClickInterceptedException')
-                                    pass
-                            else:
-                                try:
-                                    starsRate = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-star-display')))
-                                    worksheet.write('C' + str(row), float((starsRate.text).replace(',','.')))
-                                except TimeoutException:
-                                    print('No starsRate')
-                                    pass
-                                try:
-                                    commentsNum = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-rating-term-list > span:nth-child(1) > span:nth-child(2) > span:nth-child(1) > button:nth-child(1)')))
-                                    subCommentsNum = re.sub('[()]', '', str(commentsNum.text))
-                                    cleanCommentsNum = subCommentsNum.replace('.', '')
-                                    worksheet.write('D' + str(row), int(cleanCommentsNum))
-                                except TimeoutException:
-                                    print('No commentsNum')
-                                    pass
-                                try:
-                                    placeType = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.GLOBAL__gm2-body-2:nth-child(2) > span:nth-child(1) > span:nth-child(1) > button:nth-child(1)')))
-                                    worksheet.write('E' + str(row), placeType.text)
-                                except TimeoutException:
-                                    print('No placeType')
-                                    pass
-                        except TimeoutException:
-#                            print('2 TimeoutException in section-result')
-                            pass
-                        except ElementClickInterceptedException:
-#                            print('2 ElementClickInterceptedException')
-                            pass
-                    finally:
-                        print(time.strftime("%H:%M:%S") + '  Search level ' + str(searchLevel) + ': ' + str(searchPercent) + "%" + ' | ' + sectionResult.text)
-                        searchPercent += 5
-                        row += 1
-        except StaleElementReferenceException:
-            print('StaleElementReferenceException...')
-            pass
-
-        searchLevel += 1
-        searchPercent = 0
-
-        ms.zoomSearch()
-
-        try:
-            emptyList = ms.getDriver().find_element_by_css_selector('.section-no-result-title')
-        except NoSuchElementException:
-            pass
-        else:
-            print('List empty: Skipping neighbourhood')
+            sectionResultsRAW = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.section-result-title')))
+            sectionResultsLocationRAW = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.section-result-location')))
+        except TimeoutException:
+            print('1 List empty: Skipping neighbourhood')
             break
+        else:
+            try:
+                for (sectionResult, sectionResultLocation) in itertools.zip_longest(sectionResultsRAW, sectionResultsLocationRAW, fillvalue = barri):
+                        worksheet.write('C' + str(row), barri)
+                        ms.getResultsDriver().find_element_by_id('searchboxinput').send_keys(Keys.CONTROL + 'a')
+                        ms.getResultsDriver().find_element_by_id('searchboxinput').send_keys(sectionResult.text + " " + sectionResultLocation.text + Keys.RETURN)
+                        time.sleep(6)
+                        try:
+                            newTitle = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-hero-header-title-title')))
+                            newTitle = ms.getResultsDriver().find_element_by_css_selector('.section-hero-header-title-title').text
+                            newLocation = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-info-text')))
+                            newLocation = ms.getResultsDriver().find_element_by_css_selector('.section-info-text').text
+                            worksheet.write('A' + str(row), newTitle)
+                            worksheet.write('B' + str(row), newLocation)
+                        except TimeoutException:
+                            try:
+                                click = WebDriverWait(ms.getResultsDriver(), 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.section-result-title')))
+                                ms.getResultsDriver().find_element_by_css_selector('.section-result').click()
+                                time.sleep(6)
+                                try:
+                                    newTitle = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-hero-header-title-title')))
+                                    newTitle = ms.getResultsDriver().find_element_by_css_selector('.section-hero-header-title-title').text
+                                    newLocation = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-info-text')))
+                                    newLocation = ms.getResultsDriver().find_element_by_css_selector('.section-info-text').text
+                                    worksheet.write('A' + str(row), newTitle)
+                                    worksheet.write('B' + str(row), newLocation)
+                                except TimeoutException:
+                                    try:
+                                        click = WebDriverWait(ms.getResultsDriver(), 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.section-result-title')))
+                                        ms.getResultsDriver().find_element_by_css_selector('.section-result').click()
+                                        time.sleep(6)
+                                        try:
+                                            newTitle = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-hero-header-title-title')))
+                                            newTitle = ms.getResultsDriver().find_element_by_css_selector('.section-hero-header-title-title').text
+                                            newLocation = WebDriverWait(ms.getResultsDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-info-text')))
+                                            newLocation = ms.getResultsDriver().find_element_by_css_selector('.section-info-text').text
+                                            worksheet.write('A' + str(row), newTitle)
+                                            worksheet.write('B' + str(row), newLocation)
+                                        except TimeoutException:
+    #                                        print('1 TimeoutException in section-info-text')
+                                            pass
+                                        else:
+                                            try:
+                                                starsRate = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-star-display')))
+                                                worksheet.write('C' + str(row), float((starsRate.text).replace(',','.')))
+                                            except TimeoutException:
+                                                print('No starsRate')
+                                                pass
+                                            try:
+                                                commentsNum = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-rating-term-list > span:nth-child(1) > span:nth-child(2) > span:nth-child(1) > button:nth-child(1)')))
+                                                subCommentsNum = re.sub('[()]', '', str(commentsNum.text))
+                                                cleanCommentsNum = subCommentsNum.replace('.', '')
+                                                worksheet.write('D' + str(row), int(cleanCommentsNum))
+                                            except TimeoutException:
+                                                print('No commentsNum')
+                                                pass
+                                            try:
+                                                placeType = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.GLOBAL__gm2-body-2:nth-child(2) > span:nth-child(1) > span:nth-child(1) > button:nth-child(1)')))
+                                                worksheet.write('E' + str(row), placeType.text)
+                                            except TimeoutException:
+                                                print('No placeType')
+                                                pass
+                                    except TimeoutException:
+    #                                    print('1 TimeoutException in section-result')
+                                        pass
+                                    except ElementClickInterceptedException:
+    #                                    print('1 ElementClickInterceptedException')
+                                        pass
+                                else:
+                                    try:
+                                        starsRate = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-star-display')))
+                                        worksheet.write('C' + str(row), float((starsRate.text).replace(',','.')))
+                                    except TimeoutException:
+                                        print('No starsRate')
+                                        pass
+                                    try:
+                                        commentsNum = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-rating-term-list > span:nth-child(1) > span:nth-child(2) > span:nth-child(1) > button:nth-child(1)')))
+                                        subCommentsNum = re.sub('[()]', '', str(commentsNum.text))
+                                        cleanCommentsNum = subCommentsNum.replace('.', '')
+                                        worksheet.write('D' + str(row), int(cleanCommentsNum))
+                                    except TimeoutException:
+                                        print('No commentsNum')
+                                        pass
+                                    try:
+                                        placeType = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.GLOBAL__gm2-body-2:nth-child(2) > span:nth-child(1) > span:nth-child(1) > button:nth-child(1)')))
+                                        worksheet.write('E' + str(row), placeType.text)
+                                    except TimeoutException:
+                                        print('No placeType')
+                                        pass
+                            except TimeoutException:
+    #                            print('2 TimeoutException in section-result')
+                                pass
+                            except ElementClickInterceptedException:
+    #                            print('2 ElementClickInterceptedException')
+                                pass
+                        finally:
+                            print(time.strftime("%H:%M:%S") + '  Search level ' + str(searchLevel) + ': ' + str(searchPercent) + "%" + ' | ' + sectionResult.text)
+                            searchPercent += 5
+                            row += 1
+            except StaleElementReferenceException:
+                print('StaleElementReferenceException...')
+                pass
+
+            searchLevel += 1
+            searchPercent = 0
+
+            ms.zoomSearch()
+
+            try:
+                emptyList = ms.getDriver().find_element_by_css_selector('.section-no-result-title')
+            except NoSuchElementException:
+                pass
+            else:
+                print('List empty: Skipping neighbourhood')
+                break
 
 workbook.close()
 
@@ -216,7 +230,3 @@ endDate = datetime.date.today()
 end = time.strftime("%H:%M:%S")
 
 print(concept.upper() + '\nTime elapsed:\n' + str(startDate) + ' ' + start + '\n' + str(endDate) + ' ' + end)
-
-#upload = subprocess.Popen(["python3", "/Users/flatline/Desktop/code/Scrapers/nou-comerciant/2-xlsx-to-mymaps.py", concept, location], stdout=subprocess.PIPE)
-#output = upload.communicate()[0]
-#print(output)
