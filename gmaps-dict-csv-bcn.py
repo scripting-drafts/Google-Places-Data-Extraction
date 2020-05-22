@@ -88,7 +88,7 @@ def unique_everseen(iterable, key=None):
                 yield element
 
 def write_csv(data, path, mode="w"):
-    with open(path, mode) as f:
+    with open(path, mode, encoding='utf-16') as f:
         writer = csv.writer(f, delimiter=';')
         writer.writerow(data.keys())
         writer.writerows(zip(*data.values()))
@@ -146,7 +146,7 @@ for (sectionResult, sectionResultLocation) in tqdm(locationSet):
         ms.getDriver().get('https://www.google.com/maps/')
     finally:
         ms.getDriver().find_element_by_id('searchboxinput').send_keys(sectionResult + " " + sectionResultLocation + Keys.RETURN)
-    time.sleep(4)
+    time.sleep(5)
     try:
         newTitle = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-hero-header-title-title')))
         newLocation = WebDriverWait(ms.getDriver(), 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.section-info-text')))
