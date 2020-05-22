@@ -219,8 +219,6 @@ for (sectionResult, sectionResultLocation) in tqdm(locationSet):
         data['type'].append(cleanPlaceType)
 ms.getDriver().quit()
 
-print(data)
-
 write_csv(data, path)
 
 endDate = datetime.date.today()
