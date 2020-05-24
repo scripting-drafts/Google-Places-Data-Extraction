@@ -1,4 +1,4 @@
-This scripts will scan Barcelona's neighbourhoods by keyword given and write the results to a table.
+This scripts scan Barcelona's neighbourhoods by keyword given and write the results to a table.
 
 geocoded-places-csv-bcn.py
  - Update that gets coordinates from the Nominatim API.
