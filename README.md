@@ -1,6 +1,6 @@
 # Google-Data-Science
 
-This is meant to be run on GNU/Linux but can be adapted to OSX by changing CONTROL keys to COMMAND keys.
+This scripts are meant to be run on GNU/Linux but can be adapted to OSX by changing CONTROL keys to COMMAND keys.
 
 Requirements:
  - Firefox
