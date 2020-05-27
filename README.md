@@ -16,8 +16,8 @@ Requirements:
   - Pandas
   - Branca
   
- - places-to-csv.py
- Scraps Google Maps by keyword given and writes it to a CSV file with UTF-8 encoding and semicolon delimiter.
+ # places-to-csv.py
+Scraps Google Maps by keyword given and writes it to a CSV file with UTF-8 encoding and semicolon delimiter.
  
- - csv-to-html-map.py
- Takes CSV file as argument. Creates a map with markers of all places classifying their Number of Comments by color and their Stars Rate by diameter of the marker.
+ # csv-to-html-map.py
+Takes CSV file as argument. Creates a map with markers of all places classifying their Number of Comments by color and their Stars Rate by diameter of the marker.
