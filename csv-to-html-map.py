@@ -3,7 +3,7 @@ import folium
 import pandas as pd
 import branca
 
-script, file = argv[0], argv[1]
+file = argv[1]
 
 df = pd.read_csv(file, delimiter=';')
 df.fillna(value=0, inplace=True)
