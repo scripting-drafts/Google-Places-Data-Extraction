@@ -97,18 +97,18 @@ ms.setDriver()
 ####################################### LOCATE PLACES
 for barri in tqdm(barris):
     try:
-        ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.COMMAND + 'a')
+        ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.CONTROL + 'a')
         ms.getDriver().find_element_by_id('searchboxinput').send_keys(barri + ' barcelona' + Keys.RETURN)
     except ElementNotInteractableException:
         ms.getDriver().get('https://www.google.com/maps/')
         ms.getDriver().find_element_by_id('searchboxinput').send_keys(barri + ' barcelona' + Keys.RETURN)
     time.sleep(6)
     try:
-        ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.COMMAND + 'a')
+        ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.CONTROL + 'a')
         ms.getDriver().find_element_by_id('searchboxinput').send_keys(concept + Keys.RETURN)
     except ElementNotInteractableException:
         time.sleep(4)
-        ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.COMMAND + 'a')
+        ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.CONTROL + 'a')
         ms.getDriver().find_element_by_id('searchboxinput').send_keys(concept + Keys.RETURN)
     time.sleep(4)
     ms.zoomSearch()
@@ -137,7 +137,7 @@ locationSet = list(unique_everseen(locationList, key=frozenset))
 ################################## EXTRACT DATA
 for (sectionResult, sectionResultLocation) in tqdm(locationSet):
     try:
-        ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.COMMAND + 'a')
+        ms.getDriver().find_element_by_id('searchboxinput').send_keys(Keys.CONTROL + 'a')
     except ElementNotInteractableException:
         ms.getDriver().get('https://www.google.com/maps/')
     finally:
