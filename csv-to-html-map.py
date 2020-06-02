@@ -13,7 +13,7 @@ m = folium.Map(
     zoom_start=13
 )
 
-for row in range(0, len(df.index)):
+for row in range(0, len(df.index)+1):
     lat, lon, comments = df.loc[row, 'lat'], df.loc[row, 'lon'], df.loc[row, 'comments']
 
 #    if df.loc[row, 'rate'] == 0:
