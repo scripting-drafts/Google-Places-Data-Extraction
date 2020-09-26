@@ -11,5 +11,3 @@ gmaps-xlsx-bcn-2.py
 
 gmaps-xlsx-bcn-1.py
  - Keeps duplicates and classifies the results by neighbourhoods.
-
-Beware COMMAND or CONTROL keys depend on MacOS or GNU/Linux.
